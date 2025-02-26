@@ -27,13 +27,13 @@ The entry point of the program that executes the tokenization and parsing.
 
 ## the Code
 
-### Tokenization: 
+#### Tokenization: 
 The tokenize function reads the input string character by character, identifying and categorizing tokens based on their type (integer, identifier, operator, etc.). It handles whitespace and stores valid tokens in an array.
 
-### Parsing:
+#### Parsing:
 The parse function iterates through the token array, checking for the correct sequence of tokens that form valid assignment statements. It validates the presence of identifiers, assignment operators, integers, and semicolons, providing error messages for any discrepancies.
 
-### Main Function: 
+#### Main Function: 
 The main function serves as the entry point, where an example input string is defined, and the tokenization and parsing processes are executed.
 
 
