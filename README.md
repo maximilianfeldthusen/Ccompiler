@@ -43,8 +43,9 @@ The main function serves as the entry point, where an example input string is de
 
 ### Limitations:
 
-vIt only handles addition and does not support more complex expressions or operator precedence.
+It only handles addition and does not support more complex expressions or operator precedence.
  The program e.g. does not store or evaluate the values of variables that are used in expressions.
+
 
 
 ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
