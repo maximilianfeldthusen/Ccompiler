@@ -1,5 +1,6 @@
+## Documentation
 
-## Tokenizer and Parser for Simple Assignments in C
+### Tokenizer and Parser for Simple Assignments in C
 
 
 Simple C program that implements a simple tokenizer and parser for basic assignment statements. The program is designed to read a string of code, tokenize it into meaningful components, and then parse those tokens to validate and interpret simple variable assignments. 
