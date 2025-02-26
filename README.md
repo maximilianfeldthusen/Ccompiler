@@ -12,7 +12,6 @@ The process of analyzing a sequence of tokens to determine its grammatical struc
 The use of structures and enumerations to represent tokens and their types.
 
 #### The program defines various token types, including integers, identifiers, and operators, and uses an array to store these tokens for further processing.
-Code Structure
 
 #### The code is structured into several components:
 
