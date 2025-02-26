@@ -11,16 +11,20 @@ The process of analyzing a sequence of tokens to determine its grammatical struc
 ###   Data Structures: 
 The use of structures and enumerations to represent tokens and their types.
 
-#### The program defines various token types, including integers, identifiers, and operators, and uses an array to store these tokens for further processing.
+### The program defines various token types, including integers, identifiers, and operators, and uses an array to store these tokens for further processing.
 
-#### The code is structured into several components:
+### The code is structured into several components:
 
 ###  Includes and Definitions: Necessary libraries and constants are defined.
+
 ###  Token Enumeration and Structure: An enumeration for token types and a structure to hold token data.
+
 ###   Tokenization Function:
 A function that processes the input string and populates the token array.
+
 ###    Parsing Function:
 A function that interprets the tokens and checks for syntactical correctness.
+
 ###   Main Function:
 The entry point of the program that executes the tokenization and parsing.
 
@@ -37,4 +41,4 @@ The parse function iterates through the token array, checking for the correct se
 The main function serves as the entry point, where an example input string is defined, and the tokenization and parsing processes are executed.
 
 
- 	![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
+![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
