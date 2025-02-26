@@ -1,19 +1,41 @@
-# Ccompiler
-Simple C Compiler in C
 
-This example includes a lexer and parser with fundamental syntax checking. Keep in mind that this is a very simplified version and does not encompass the entire C language or its complexities.
+## Tokenizer and Parser for Simple Assignments in C
 
-Explanation
 
-1. Tokenization: The `tokenize` function scans the input string and breaks it down into tokens. It identifies integers, identifiers, and a few operators/symbols.
+Simple C program that implements a simple tokenizer and parser for basic assignment statements. The program is designed to read a string of code, tokenize it into meaningful components, and then parse those tokens to validate and interpret simple variable assignments. 
 
-2. Parsing: The `parse` function checks whether the tokens form valid statements. It ensures that each identifier is followed by an assignment operator and an integer, and it checks for a semicolon at the end.
+###   Tokenization: 
+The process of breaking down a string of text into smaller, manageable pieces called tokens.
+###   Parsing: 
+The process of analyzing a sequence of tokens to determine its grammatical structure.
+###   Data Structures: 
+The use of structures and enumerations to represent tokens and their types.
 
-3. Error Handling: The compiler looks for various syntax errors, such as missing assignments, invalid characters, and missing semicolons.
+#### The program defines various token types, including integers, identifiers, and operators, and uses an array to store these tokens for further processing.
+Code Structure
 
-Limitations
-- This example does not implement a complete C-like language; many features (such as function definitions, control structures, and more complex expressions) are left out.
-- There are no semantic checks (like type checking).
-- The code does not generate machine code; it merely interprets the statements.
-- This serves only as a starting point for a more advanced compiler.
+#### The code is structured into several components:
 
+###  Includes and Definitions: Necessary libraries and constants are defined.
+###  Token Enumeration and Structure: An enumeration for token types and a structure to hold token data.
+###   Tokenization Function:
+A function that processes the input string and populates the token array.
+###    Parsing Function:
+A function that interprets the tokens and checks for syntactical correctness.
+###   Main Function:
+The entry point of the program that executes the tokenization and parsing.
+
+
+## the Code
+
+### Tokenization: 
+The tokenize function reads the input string character by character, identifying and categorizing tokens based on their type (integer, identifier, operator, etc.). It handles whitespace and stores valid tokens in an array.
+
+### Parsing:
+The parse function iterates through the token array, checking for the correct sequence of tokens that form valid assignment statements. It validates the presence of identifiers, assignment operators, integers, and semicolons, providing error messages for any discrepancies.
+
+### Main Function: 
+The main function serves as the entry point, where an example input string is defined, and the tokenization and parsing processes are executed.
+
+
+ 	![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
