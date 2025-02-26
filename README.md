@@ -44,7 +44,7 @@ The main function serves as the entry point, where an example input string is de
 ### Limitations:
 
 It only handles addition and does not support more complex expressions or operator precedence.
- The program e.g. does not store or evaluate the values of variables that are used in expressions.
+ The program does not store or evaluate the values of variables that are used in expressions e.g.
 
 
 
