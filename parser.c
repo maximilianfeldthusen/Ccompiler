@@ -109,7 +109,8 @@ void parse() {
         Token token = tokens[i];
 
         if (token.type == TOKEN_ID) {
-            printf("Found identifier: %s\n", token.value);
+            printf("Found identifier: %s
+", token.value);
             if (tokens[i + 1].type != TOKEN_ASSIGN) {
                 printf("Error: Expected '=' after identifier '%s'\n", token.value);
                 exit(1);
@@ -117,16 +118,31 @@ void parse() {
 
             i++;  // Move to the assignment token
 
-            if (tokens[i + 1].type != TOKEN_INT) {
-                printf("Error: Expected integer after '='\n");
+            // Now we need to handle potential expressions
+            if (tokens[i + 1].type != TOKEN_INT && tokens[i + 1].type != TOKEN_ID) {
+                printf("Error: Expected integer or identifier after '='\n");
                 exit(1);
             }
 
-            printf("Assigned value %s to %s\n", tokens[i + 1].value, token.value);
-            i++;  // Move to the integer token
+            printf("Assigned value %s to %s
+", tokens[i + 1].value, token.value);
+            i++;  // Move to the integer or identifier token
 
-            if (tokens[i + 1].type != TOKEN_SEMICOLON) {
-                printf("Error: Expected ';' after statement\n");
+            // Check for optional expression (for simplicity, only + operator is handled)
+            if (tokens[i].type == TOKEN_PLUS) {
+                i++;  // Move to the next token
+                if (tokens[i].type != TOKEN_ID && tokens[i].type != TOKEN_INT) {
+                    printf("Error: Expected integer or identifier after '+'\n");
+                    exit(1);
+                }
+                printf("Expression: %s + %s
+", token.value, tokens[i].value);
+                i++;  // Move to the next token
+            }
+
+            if (tokens[i].type != TOKEN_SEMICOLON) {
+                printf("Error: Expected ';' after statement
+");
                 exit(1);
             }
 
@@ -144,3 +160,4 @@ int main() {
 
     return 0;
 }
+
