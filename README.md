@@ -1,51 +1,258 @@
 ## Documentation
 
-### Tokenizer and Parser for Simple Assignments in C
+### Overview:
+The program reads a string containing multiple assignment statements, tokenizes the input into meaningful tokens (identifiers, numbers, operators, etc.), and then parses these tokens to verify the syntax of simple assignment statements with optional addition operations.
 
+---
 
-Simple C program that implements a simple tokenizer and parser for basic assignment statements. The program is designed to read a string of code, tokenize it into meaningful components, and then parse those tokens to validate and interpret simple variable assignments. 
+### Breakdown:
 
-###   Tokenization: 
-The process of breaking down a string of text into smaller, manageable pieces called tokens.
-###   Parsing: 
-The process of analyzing a sequence of tokens to determine its grammatical structure.
-###   Data Structures: 
-The use of structures and enumerations to represent tokens and their types.
+#### 1. **Includes and Macros:**
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
-### The program defines various token types, including integers, identifiers, and operators, and uses an array to store these tokens for further processing.
+#define MAX_TOKENS 100
+#define MAX_TOKEN_LENGTH 64
+```
+- Includes standard libraries for input/output, memory, string manipulation, and character classification functions.
+- Defines maximum number of tokens (`MAX_TOKENS`) and maximum length of each token (`MAX_TOKEN_LENGTH`).
 
-### The code is structured into several components:
+---
 
-###  Includes and Definitions: Necessary libraries and constants are defined.
+#### 2. **Token Types Enumeration:**
+```c
+typedef enum {
+    TOKEN_INT,
+    TOKEN_ID,
+    TOKEN_SEMICOLON,
+    TOKEN_ASSIGN,
+    TOKEN_PLUS,
+    TOKEN_MINUS,
+    TOKEN_END,
+    TOKEN_INVALID
+} TokenType;
+```
+- Defines different kinds of tokens the tokenizer can identify:
+  - `TOKEN_INT`: Numeric literals.
+  - `TOKEN_ID`: Identifiers (variable names).
+  - `TOKEN_SEMICOLON`: The `;` character.
+  - `TOKEN_ASSIGN`: The `=` character.
+  - `TOKEN_PLUS`: The `+` character.
+  - `TOKEN_MINUS`: The `-` character (not used in parsing here but defined).
+  - `TOKEN_END`: End of input token.
+  - `TOKEN_INVALID`: For invalid tokens (not used explicitly here).
 
-###  Token Enumeration and Structure: An enumeration for token types and a structure to hold token data.
+---
 
-###   Tokenization Function:
-A function that processes the input string and populates the token array.
+#### 3. **Token Structure:**
+```c
+typedef struct {
+    TokenType type;
+    char value[MAX_TOKEN_LENGTH];
+} Token;
+```
+- Each token contains:
+  - Its type.
+  - Its string value (e.g., `"x"`, `"5"`, `"+"`).
 
-###    Parsing Function:
-A function that interprets the tokens and checks for syntactical correctness.
+---
 
-###   Main Function:
-The entry point of the program that executes the tokenization and parsing.
+#### 4. **Global Token Array and Counter:**
+```c
+Token tokens[MAX_TOKENS];
+int token_count = 0;
+```
+- Stores tokens after tokenization.
+- Keeps track of how many tokens are stored.
 
+---
 
-## the Code
+#### 5. **Tokenization Function (`tokenize`):**
+```c
+void tokenize(const char *input) {
+    const char *p = input;
+    while (*p) {
+        while (isspace(*p)) p++;  // Skip whitespace
 
-#### Tokenization: 
-The tokenize function reads the input string character by character, identifying and categorizing tokens based on their type (integer, identifier, operator, etc.). It handles whitespace and stores valid tokens in an array.
+        // Handle numbers
+        if (isdigit(*p)) {
+            Token token;
+            token.type = TOKEN_INT;
+            int i = 0;
+            while (isdigit(*p) && i < MAX_TOKEN_LENGTH - 1) {
+                token.value[i++] = *p++;
+            }
+            token.value[i] = '\0';
+            if (token_count < MAX_TOKENS) {
+                tokens[token_count++] = token;
+            }
+        }
+        // Handle identifiers
+        else if (isalpha(*p)) {
+            Token token;
+            token.type = TOKEN_ID;
+            int i = 0;
+            while (isalnum(*p) && i < MAX_TOKEN_LENGTH - 1) {
+                token.value[i++] = *p++;
+            }
+            token.value[i] = '\0';
+            if (token_count < MAX_TOKENS) {
+                tokens[token_count++] = token;
+            }
+        }
+        // Handle specific single-character tokens
+        else if (*p == ';') {
+            Token token;
+            token.type = TOKEN_SEMICOLON;
+            token.value[0] = ';';
+            token.value[1] = '\0';
+            if (token_count < MAX_TOKENS) {
+                tokens[token_count++] = token;
+            }
+            p++;
+        } else if (*p == '=') {
+            Token token;
+            token.type = TOKEN_ASSIGN;
+            token.value[0] = '=';
+            token.value[1] = '\0';
+            if (token_count < MAX_TOKENS) {
+                tokens[token_count++] = token;
+            }
+            p++;
+        } else if (*p == '+') {
+            Token token;
+            token.type = TOKEN_PLUS;
+            token.value[0] = '+';
+            token.value[1] = '\0';
+            if (token_count < MAX_TOKENS) {
+                tokens[token_count++] = token;
+            }
+            p++;
+        } else if (*p == '-') {
+            Token token;
+            token.type = TOKEN_MINUS;
+            token.value[0] = '-';
+            token.value[1] = '\0';
+            if (token_count < MAX_TOKENS) {
+                tokens[token_count++] = token;
+            }
+            p++;
+        }
+        // Handle invalid characters
+        else {
+            printf("Error: Invalid character '%c'\n", *p);
+            exit(1);
+        }
+    }
 
-#### Parsing:
-The parse function iterates through the token array, checking for the correct sequence of tokens that form valid assignment statements. It validates the presence of identifiers, assignment operators, integers, and semicolons, providing error messages for any discrepancies.
+    // Append end token to mark the end of input
+    Token token;
+    token.type = TOKEN_END;
+    tokens[token_count++] = token;
+}
+```
+- Reads the input string character by character.
+- Skips whitespace.
+- Recognizes numbers, identifiers, and specific symbols, creating tokens accordingly.
+- On encountering an invalid character, prints an error and exits.
+- Appends a special `TOKEN_END` to mark input termination.
 
-#### Main Function: 
-The main function serves as the entry point, where an example input string is defined, and the tokenization and parsing processes are executed.
+---
 
-### Limitations:
+#### 6. **Parsing Function (`parse`):**
+```c
+void parse() {
+    int i = 0;
+    while (i < token_count) {
+        Token token = tokens[i];
 
-It only handles addition and does not support more complex expressions or operator precedence.
- The program does not store or evaluate the values of variables that are used in expressions etc.
+        // Parse assignment: ID '=' expression ';'
+        if (token.type == TOKEN_ID) {
+            printf("Found identifier: %s
+", token.value);
+            i++;
+            // Expect '=' after ID
+            if (i >= token_count || tokens[i].type != TOKEN_ASSIGN) {
+                printf("Error: Expected '=' after identifier '%s'\n", token.value);
+                exit(1);
+            }
+            i++; // move past '='
 
+            // Expect a value (ID or INT)
+            if (i >= token_count || (tokens[i].type != TOKEN_INT && tokens[i].type != TOKEN_ID)) {
+                printf("Error: Expected integer or identifier after '='\n");
+                exit(1);
+            }
+            printf("Assigned value %s to %s
+", tokens[i].value, tokens[i - 2].value);
+            int lhs_index = i - 2; // index of the variable being assigned
+            int rhs_index = i;     // index of the value assigned
+            i++; // move past the value token
 
+            // Optional '+' expression
+            if (i < token_count && tokens[i].type == TOKEN_PLUS) {
+                i++; // move past '+'
+                if (i >= token_count || (tokens[i].type != TOKEN_INT && tokens[i].type != TOKEN_ID)) {
+                    printf("Error: Expected integer or identifier after '+'\n");
+                    exit(1);
+                }
+                printf("Expression: %s + %s
+", tokens[rhs_index].value, tokens[i].value);
+                i++; // move past second operand
+            }
 
-![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
+            // Expect semicolon to end statement
+            if (i >= token_count || tokens[i].type != TOKEN_SEMICOLON) {
+                printf("Error: Expected ';' after statement
+");
+                exit(1);
+            }
+            printf("Statement terminated with ';'\n");
+            i++; // move past ';'
+        }
+        // End of tokens
+        else if (token.type == TOKEN_END) {
+            break;
+        } else {
+            printf("Error: Unexpected token '%s'\n", token.value);
+            exit(1);
+        }
+    }
+}
+```
+- Iterates through tokens.
+- Looks for assignment statements of the form: `ID = (ID | INT) [+ (ID | INT)] ;`.
+- Checks for correct syntax, printing relevant messages.
+- Handles optional addition operation.
+- Terminates parsing at `TOKEN_END` or on errors.
+
+---
+
+#### 7. **Main Function:**
+```c
+int main() {
+    const char *input = "x = 5; y = 10; z = x + y;";  // Example input
+    tokenize(input);
+    parse();
+
+    return 0;
+}
+```
+- Defines an example input string with multiple assignment statements.
+- Calls `tokenize` to break input into tokens.
+- Calls `parse` to analyze the tokens and validate syntax.
+
+---
+
+### Summary:
+- **Tokenization** converts a string into a sequence of tokens.
+- **Parsing** checks if tokens conform to a simple assignment syntax, handling optional addition.
+- The program outputs information about the tokens it finds and reports syntax errors if encountered.
+
+---
+
+Let me know if you'd like further details or modifications!
+
