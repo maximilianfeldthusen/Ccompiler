@@ -96,59 +96,65 @@ void tokenize(const char *input) {
         }
     }
 
+    // Append end token
     Token token;
     token.type = TOKEN_END;
-    if (token_count < MAX_TOKENS) {
-        tokens[token_count++] = token;  // Indicate end of tokens
-    }
+    tokens[token_count++] = token;
 }
 
 // Function to parse the tokens
 void parse() {
-    for (int i = 0; i < token_count; i++) {
+    int i = 0;
+    while (i < token_count) {
         Token token = tokens[i];
 
+        // Parse assignment statement: ID '=' expression ';'
         if (token.type == TOKEN_ID) {
             printf("Found identifier: %s
 ", token.value);
-            if (tokens[i + 1].type != TOKEN_ASSIGN) {
+            i++;
+            if (i >= token_count || tokens[i].type != TOKEN_ASSIGN) {
                 printf("Error: Expected '=' after identifier '%s'\n", token.value);
                 exit(1);
             }
+            i++; // move past '='
 
-            i++;  // Move to the assignment token
-
-            // Now we need to handle potential expressions
-            if (tokens[i + 1].type != TOKEN_INT && tokens[i + 1].type != TOKEN_ID) {
+            // Parse expression (either ID or INT)
+            if (i >= token_count || (tokens[i].type != TOKEN_INT && tokens[i].type != TOKEN_ID)) {
                 printf("Error: Expected integer or identifier after '='\n");
                 exit(1);
             }
-
             printf("Assigned value %s to %s
-", tokens[i + 1].value, token.value);
-            i++;  // Move to the integer or identifier token
+", tokens[i].value, tokens[i - 2].value);
+            int lhs_index = i - 2; // index of the variable being assigned
+            int rhs_index = i; // index of the value assigned
+            i++; // move past the value token
 
-            // Check for optional expression (for simplicity, only + operator is handled)
-            if (tokens[i].type == TOKEN_PLUS) {
-                i++;  // Move to the next token
-                if (tokens[i].type != TOKEN_ID && tokens[i].type != TOKEN_INT) {
+            // Check for optional '+' expression
+            if (i < token_count && tokens[i].type == TOKEN_PLUS) {
+                i++; // move past '+'
+                if (i >= token_count || (tokens[i].type != TOKEN_INT && tokens[i].type != TOKEN_ID)) {
                     printf("Error: Expected integer or identifier after '+'\n");
                     exit(1);
                 }
                 printf("Expression: %s + %s
-", token.value, tokens[i].value);
-                i++;  // Move to the next token
+", tokens[rhs_index].value, tokens[i].value);
+                i++; // move past the second operand
             }
 
-            if (tokens[i].type != TOKEN_SEMICOLON) {
+            // Expect semicolon
+            if (i >= token_count || tokens[i].type != TOKEN_SEMICOLON) {
                 printf("Error: Expected ';' after statement
 ");
                 exit(1);
             }
-
             printf("Statement terminated with ';'\n");
+            i++; // move past ';'
         } else if (token.type == TOKEN_END) {
             break;
+        } else {
+            printf("Error: Unexpected token '%s'\n", token.value);
+            exit(1);
         }
     }
 }
